@@ -1,0 +1,646 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AuthResponse {
+  accessToken: String
+  code: String
+  message: String!
+  ok: Boolean!
+  refreshToken: String
+  user: AuthUser
+}
+
+type AuthUser {
+  commercialAgent: CommercialAgent
+  id: String!
+  phone: String!
+  role: Role!
+  type: String!
+}
+
+type Brand {
+  id: ID!
+  isActive: Boolean!
+  logoUrl: String!
+  name: String!
+}
+
+type CartCalculationResult {
+  items: [CartItem!]!
+  total: Float!
+}
+
+type CartItem {
+  productId: String!
+  total: Float!
+}
+
+input CartItemInput {
+  productId: String!
+  quantity: Int!
+}
+
+type Category {
+  children: [Category!]
+  id: ID!
+  imageUrl: String!
+  isActive: Boolean!
+  nameAr: String!
+  nameFr: String!
+  parent: Category
+  parentId: ID
+  sortOrder: Int!
+}
+
+type CommercialAgent {
+  commissionRate: Float!
+  id: ID!
+  territory: String!
+  userId: String!
+}
+
+input CreateBrandInput {
+  isActive: Boolean! = true
+  logoUrl: String!
+  name: String!
+}
+
+input CreateOrderInput {
+  items: [OrderItemInput!]!
+  notes: String
+}
+
+input CreateProductInput {
+  basePrice: Float!
+  brandId: ID!
+  categoryId: ID!
+  currentStock: Int!
+  descriptionAr: String
+  descriptionFr: String
+  isActive: Boolean! = true
+  isFeatured: Boolean! = false
+  nameAr: String!
+  nameFr: String!
+  sku: String!
+}
+
+input CreatePromotionInput {
+  endDate: String!
+  isActive: Boolean! = true
+  name: String!
+  startDate: String!
+  type: PromotionType!
+  value: Float!
+}
+
+input CreateShopImageInput {
+  imageUrl: String!
+  shopId: String!
+  sortOrder: Float
+}
+
+input CreateShopInput {
+  address: String!
+  city: String!
+  latitude: Float
+  longitude: Float
+  nameAr: String!
+  nameFr: String
+  ownerName: String!
+  password: String!
+  phone: String!
+  profileImage: String
+}
+
+input CreateSliderInput {
+  imageUrl: String!
+  isActive: Boolean! = true
+  linkUrl: String
+  sortOrder: Float! = 0
+}
+
+input CreateUserInput {
+  isActive: Boolean! = true
+  password: String!
+  phone: String!
+  roleId: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+input LoginInput {
+  password: String!
+  phone: String!
+}
+
+type Mutation {
+  addPriceTier(minQuantity: Float!, pricePerUnit: Float!, productId: ID!): Boolean!
+  addProductImage(imageUrl: String!, isPrimary: Boolean! = false, productId: ID!): Boolean!
+  addShopImage(input: CreateShopImageInput!): ShopImage!
+  approveShop(shopId: ID!): Shop!
+  blockShop(shopId: ID!): Shop!
+  cancelOrder(id: ID!): Order!
+  createBrand(input: CreateBrandInput!): Brand!
+  createBroadcastNotification(message: String!, route: String!, title: String!, url: String!): Notification!
+  createOrder(input: CreateOrderInput!): Order!
+  createProduct(input: CreateProductInput!): Product!
+  createPromotion(input: CreatePromotionInput!): Promotion!
+  createShop(input: CreateShopInput!): Shop!
+  createSlider(input: CreateSliderInput!): Slider!
+  createUser(input: CreateUserInput!): User!
+  deleteBrand(id: ID!): Boolean!
+  deleteProduct(id: ID!): Boolean!
+  deletePromotion(id: ID!): Boolean!
+  deleteShop(id: ID!): Boolean!
+  deleteShopImage(id: ID!): Boolean!
+  deleteSlider(id: ID!): Boolean!
+  deleteUser(id: ID!): Boolean!
+  login(input: LoginInput!): AuthResponse!
+  logout: Boolean!
+  markNotificationAsRead(id: String!): Notification!
+  refreshToken(token: String!): AuthResponse!
+  registerShop(input: RegisterShopInput!): RegisterResponse!
+  reorderFromPrevious(originalOrderId: ID!): Order!
+  shopLogin(input: LoginInput!): AuthResponse!
+  updateBrand(id: ID!, input: UpdateBrandInput!): Brand!
+  updateOrderStatus(id: ID!, input: UpdateOrderStatusInput!): Order!
+  updatePassword(input: UpdatePasswordInput!): Boolean!
+  updateProduct(id: ID!, input: UpdateProductInput!): Product!
+  updateProfile(input: UpdateProfileInput!): AuthUser!
+  updatePromotion(id: ID!, input: UpdatePromotionInput!): Promotion!
+  updateShop(id: ID!, images: [Upload!], input: UpdateShopInput!): Shop!
+  updateShopImage(id: ID!, input: UpdateShopImageInput!): ShopImage!
+  updateShopPassword(id: ID!, input: UpdateShopPasswordInput!): Shop!
+  updateShopStatus(id: ID!, status: String!): Shop!
+  updateSlider(id: ID!, input: UpdateSliderInput!): Slider!
+  updateStock(operation: String! = "add", productId: ID!, quantity: Float!): Product!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+}
+
+type Notification {
+  createdAt: DateTime!
+  id: String!
+  imageUrl: String
+  isRead: Boolean!
+  message: String!
+  products: JSON
+  route: String
+  shopId: String
+  title: String
+}
+
+type Order {
+  createdAt: DateTime!
+  deliveredAt: DateTime
+  discountAmount: Float!
+  id: ID!
+  items: [OrderItem!]!
+  notes: String
+  orderNumber: String!
+  processedAt: DateTime
+  shop: OrderShop!
+  status: OrderStatus!
+  statusHistory: [OrderStatusHistory!]
+  subtotal: Float!
+  taxAmount: Float!
+  totalAmount: Float!
+  updatedAt: DateTime
+}
+
+type OrderAnalytics {
+  averageOrderValue: Float!
+  ordersByStatus: [OrderStatusCount!]!
+  revenueByDay: [RevenueByDay!]!
+  topProducts: [TopProduct!]!
+  topShops: [TopShop!]!
+  totalOrders: Int!
+  totalRevenue: Float!
+}
+
+type OrderBrand {
+  id: ID!
+  logoUrl: String!
+  name: String!
+}
+
+type OrderCategory {
+  id: ID!
+  nameAr: String!
+  nameFr: String!
+}
+
+type OrderConnection {
+  hasMore: Boolean!
+  limit: Int!
+  orders: [Order!]!
+  page: Int!
+  total: Int!
+}
+
+input OrderFilters {
+  dateFrom: String
+  dateTo: String
+  limit: Int! = 20
+  page: Int! = 1
+  shopId: ID
+  status: OrderStatus
+}
+
+type OrderItem {
+  id: ID!
+  product: OrderProduct!
+  quantity: Int!
+  totalPrice: Float!
+  unitPrice: Float!
+}
+
+input OrderItemInput {
+  productId: ID!
+  quantity: Int!
+}
+
+type OrderNotification {
+  createdAt: DateTime!
+  id: String!
+  imageUrl: String
+  isRead: Boolean!
+  message: String!
+  route: String
+  title: String
+  userId: Float
+}
+
+type OrderPriceTier {
+  id: ID!
+  minQuantity: Int!
+  pricePerUnit: Float!
+}
+
+type OrderProduct {
+  basePrice: Float!
+  brand: OrderBrand
+  category: OrderCategory
+  currentStock: Int!
+  descriptionAr: String
+  descriptionFr: String
+  id: ID!
+  imageDetails: [OrderProductImage!]
+  images: [OrderProductImage!]
+  nameAr: String!
+  nameFr: String!
+  priceTiers: [OrderPriceTier!]
+  sku: String!
+}
+
+type OrderProductImage {
+  id: ID!
+  imageUrl: String!
+  isPrimary: Boolean!
+  sortOrder: Int!
+}
+
+type OrderRole {
+  id: ID!
+  name: String!
+}
+
+type OrderShop {
+  address: String!
+  city: String!
+  id: ID!
+  nameAr: String!
+  nameFr: String
+  ownerName: String!
+  phone: String!
+  profileImage: String
+}
+
+type OrderStats {
+  deliveredOrders: Int!
+  pendingOrders: Int!
+  processingOrders: Int!
+  todayRevenue: Float!
+  totalOrders: Int!
+  totalRevenue: Float!
+}
+
+enum OrderStatus {
+  CANCELLED
+  CONFIRMED
+  DELIVERED
+  NEW
+  PROCESSING
+  SHIPPED
+}
+
+type OrderStatusCount {
+  count: Int!
+  percentage: Float!
+  status: String!
+}
+
+type OrderStatusHistory {
+  createdAt: DateTime!
+  id: ID!
+  notes: String
+  status: OrderStatus!
+  updatedBy: OrderUser!
+}
+
+type OrderUser {
+  email: String!
+  id: ID!
+  name: String!
+  phone: String
+  role: OrderRole
+}
+
+type PriceTier {
+  id: ID!
+  minQuantity: Int!
+  pricePerUnit: Float!
+}
+
+type Product {
+  basePrice: Float!
+  brand: Brand!
+  category: Category!
+  createdAt: DateTime!
+  currentStock: Int!
+  descriptionAr: String
+  descriptionFr: String
+  id: ID!
+  images: [ProductImage!]!
+  isActive: Boolean!
+  isFeatured: Boolean!
+  nameAr: String!
+  nameFr: String!
+  priceTiers: [PriceTier!]!
+  sku: String!
+  updatedAt: DateTime!
+}
+
+type ProductConnection {
+  hasMore: Boolean!
+  limit: Int!
+  page: Int!
+  products: [Product!]!
+  total: Int!
+}
+
+input ProductFilters {
+  brandId: ID
+  categoryId: ID
+  inStock: Boolean
+  isFeatured: Boolean
+  limit: Int! = 20
+  page: Int! = 1
+  search: String
+}
+
+type ProductImage {
+  id: ID!
+  imageUrl: String!
+  isPrimary: Boolean!
+  sortOrder: Int!
+}
+
+type Promotion {
+  createdAt: DateTime!
+  endDate: DateTime!
+  id: ID!
+  isActive: Boolean!
+  name: String!
+  startDate: DateTime!
+  type: PromotionType!
+  value: Float!
+}
+
+enum PromotionType {
+  FIXED
+  PERCENTAGE
+}
+
+type Query {
+  GetProductById(id: ID!): Product!
+  activePromotions: [Promotion!]!
+  brand(id: ID!): Brand!
+  brands: [Brand!]!
+  calculateCartTotal(items: [CartItemInput!]!): CartCalculationResult!
+  categories: [Category!]!
+  category(id: ID!): Category!
+  featuredProducts(limit: Int! = 10): [Product!]!
+  getProfile: AuthUser!
+  myNotifications: [Notification!]!
+  myOrders(status: OrderStatus): [Order!]!
+  order(id: ID!): Order!
+  orderAnalytics(period: String! = "month"): OrderAnalytics!
+  orderStats: OrderStats!
+  orders(filters: OrderFilters): OrderConnection!
+  pendingShops: [Shop!]!
+  products(filters: ProductFilters): ProductConnection!
+  promotions: [Promotion!]!
+  roles: [Role!]!
+  searchProducts(limit: Int! = 20, query: String!): [Product!]!
+  shop(id: ID!): Shop!
+  shopImages(shopId: ID!): [ShopImage!]!
+  shopStats: ShopStats!
+  shops(filters: ShopFiltersInput): [Shop!]!
+  sliders: [Slider!]!
+  user(id: ID!): User!
+  users: [User!]!
+}
+
+type RegisterResponse {
+  code: String
+  id: String
+  message: String!
+  ok: Boolean!
+  status: String
+}
+
+input RegisterShopInput {
+  address: String!
+  city: String!
+  latitude: Float
+  longitude: Float
+  ownerName: String!
+  password: String!
+  phone: String!
+  shopName: String!
+}
+
+type RevenueByDay {
+  date: String!
+  orders: Int!
+  revenue: Float!
+}
+
+type Role {
+  id: String!
+  name: String!
+  permissions: JSON!
+}
+
+type Shop {
+  address: String!
+  city: String!
+  createdAt: DateTime!
+  id: ID!
+  latitude: Float
+  longitude: Float
+  nameAr: String!
+  nameFr: String
+  ownerName: String!
+  phone: String!
+  profileImage: String
+  shopImages: [ShopImage!]
+  status: String!
+  updatedAt: DateTime!
+}
+
+input ShopFiltersInput {
+  city: String
+  ownerName: String
+  search: String
+  status: String
+}
+
+type ShopImage {
+  id: ID!
+  imageUrl: String!
+  shopId: String!
+  sortOrder: Float!
+}
+
+type ShopStats {
+  activeShops: Int!
+  blockedShops: Int!
+  newShopsThisMonth: Int!
+  pendingApprovals: Int!
+  totalShops: Int!
+}
+
+type Slider {
+  createdAt: DateTime!
+  id: ID!
+  imageUrl: String!
+  isActive: Boolean!
+  linkUrl: String
+  sortOrder: Float!
+}
+
+type Subscription {
+  broadcastNotification: Notification!
+  userNotification(userId: String!): OrderNotification!
+}
+
+type TopProduct {
+  product: OrderProduct!
+  revenue: Float!
+  totalSold: Int!
+}
+
+type TopShop {
+  shop: OrderShop!
+  totalOrders: Int!
+  totalRevenue: Float!
+}
+
+input UpdateBrandInput {
+  isActive: Boolean
+  logoUrl: String
+  name: String
+}
+
+input UpdateOrderStatusInput {
+  status: OrderStatus!
+}
+
+input UpdatePasswordInput {
+  newPassword: String!
+  oldPassword: String!
+}
+
+input UpdateProductInput {
+  basePrice: Float
+  brandId: String
+  categoryId: String
+  currentStock: Int
+  descriptionAr: String
+  descriptionFr: String
+  isActive: Boolean
+  isFeatured: Boolean
+  nameAr: String
+  nameFr: String
+}
+
+input UpdateProfileInput {
+  phone: String
+}
+
+input UpdatePromotionInput {
+  endDate: String
+  isActive: Boolean
+  name: String
+  startDate: String
+  type: PromotionType
+  value: Float
+}
+
+input UpdateShopImageInput {
+  imageUrl: String
+  sortOrder: Float
+}
+
+input UpdateShopInput {
+  address: String
+  city: String
+  latitude: Float
+  longitude: Float
+  nameAr: String
+  nameFr: String
+  ownerName: String
+  profileImage: String
+}
+
+input UpdateShopPasswordInput {
+  newPassword: String!
+  oldPassword: String!
+}
+
+input UpdateSliderInput {
+  imageUrl: String
+  isActive: Boolean
+  linkUrl: String
+  sortOrder: Float
+}
+
+input UpdateUserInput {
+  isActive: Boolean
+  password: String
+  phone: String
+  roleId: String
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+type User {
+  commercialAgent: CommercialAgent
+  createdAt: DateTime!
+  id: ID!
+  isActive: Boolean!
+  phone: String!
+  role: Role!
+  updatedAt: DateTime!
+}

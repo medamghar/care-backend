@@ -1,0 +1,94 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UpdateUserInput = exports.CreateUserInput = exports.User = void 0;
+const graphql_1 = require("@nestjs/graphql");
+const auth_dto_1 = require("../../auth/dto/auth.dto");
+const commercial_agent_dto_1 = require("./commercial-agent.dto");
+let User = class User {
+};
+exports.User = User;
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.ID),
+    __metadata("design:type", String)
+], User.prototype, "id", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], User.prototype, "phone", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", Boolean)
+], User.prototype, "isActive", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", Date)
+], User.prototype, "createdAt", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", Date)
+], User.prototype, "updatedAt", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => auth_dto_1.Role),
+    __metadata("design:type", auth_dto_1.Role)
+], User.prototype, "role", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => commercial_agent_dto_1.CommercialAgent, { nullable: true }),
+    __metadata("design:type", commercial_agent_dto_1.CommercialAgent)
+], User.prototype, "commercialAgent", void 0);
+exports.User = User = __decorate([
+    (0, graphql_1.ObjectType)()
+], User);
+let CreateUserInput = class CreateUserInput {
+};
+exports.CreateUserInput = CreateUserInput;
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], CreateUserInput.prototype, "phone", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], CreateUserInput.prototype, "password", void 0);
+__decorate([
+    (0, graphql_1.Field)(),
+    __metadata("design:type", String)
+], CreateUserInput.prototype, "roleId", void 0);
+__decorate([
+    (0, graphql_1.Field)({ defaultValue: true }),
+    __metadata("design:type", Boolean)
+], CreateUserInput.prototype, "isActive", void 0);
+exports.CreateUserInput = CreateUserInput = __decorate([
+    (0, graphql_1.InputType)()
+], CreateUserInput);
+let UpdateUserInput = class UpdateUserInput {
+};
+exports.UpdateUserInput = UpdateUserInput;
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], UpdateUserInput.prototype, "phone", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], UpdateUserInput.prototype, "password", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], UpdateUserInput.prototype, "roleId", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", Boolean)
+], UpdateUserInput.prototype, "isActive", void 0);
+exports.UpdateUserInput = UpdateUserInput = __decorate([
+    (0, graphql_1.InputType)()
+], UpdateUserInput);
+//# sourceMappingURL=user.dto.js.map
