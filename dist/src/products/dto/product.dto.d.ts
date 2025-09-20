@@ -19,6 +19,7 @@ export declare class Product {
     descriptionAr?: string;
     descriptionFr?: string;
     basePrice: number;
+    comparePrice: number;
     currentStock: number;
     isFeatured: boolean;
     isActive: boolean;
@@ -38,9 +39,11 @@ export declare class CreateProductInput {
     categoryId: string;
     brandId: string;
     basePrice: number;
+    comparePrice: number;
     currentStock: number;
     isFeatured?: boolean;
     isActive?: boolean;
+    imageUrl?: string;
 }
 export declare class UpdateProductInput {
     nameAr?: string;
@@ -53,6 +56,7 @@ export declare class UpdateProductInput {
     currentStock?: number;
     isFeatured?: boolean;
     isActive?: boolean;
+    comparePrice: number;
 }
 export declare class CreateCategoryInput {
     nameAr: string;

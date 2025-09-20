@@ -18,6 +18,9 @@ const notification_service_1 = require("./notification.service");
 const notification_entity_1 = require("./notification.entity");
 const pubservice_service_1 = require("../pubservice/pubservice.service");
 const orders_service_1 = require("../orders/orders.service");
+const common_1 = require("@nestjs/common");
+const shop_jwt_auth_guard_1 = require("../auth/guards/shop-jwt-auth.guard");
+const orders_resolver_1 = require("../orders/orders.resolver");
 let NotificationResolver = class NotificationResolver {
     constructor(notificationService, pubSubService, orderService) {
         this.notificationService = notificationService;
@@ -34,11 +37,16 @@ let NotificationResolver = class NotificationResolver {
         return notification;
     }
     async markNotificationAsRead(id, context) {
+        console.log(context.req.user);
         const shopId = context.req.user.id;
         return this.notificationService.markAsRead(id, shopId);
     }
-    async broadcastNotification() {
-        return this.pubSubService.asyncIterator('broadcastNotification');
+    broadcastNotification() {
+        console.log('broadcastNotification subscription method called!');
+        console.log('PubSubService available:', !!this.pubSubService);
+        const iterator = this.pubSubService.asyncIterator('broadcastNotification');
+        console.log('Iterator created:', !!iterator);
+        return iterator;
     }
 };
 exports.NotificationResolver = NotificationResolver;
@@ -60,6 +68,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], NotificationResolver.prototype, "createBroadcastNotification", null);
 __decorate([
+    (0, common_1.UseGuards)(shop_jwt_auth_guard_1.ShopJwtAuthGuard),
     (0, graphql_1.Mutation)(() => notification_entity_1.Notification),
     __param(0, (0, graphql_1.Args)('id')),
     __param(1, (0, graphql_1.Context)()),
@@ -68,19 +77,10 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], NotificationResolver.prototype, "markNotificationAsRead", null);
 __decorate([
-    (0, graphql_1.Subscription)(() => notification_entity_1.Notification, {
-        filter: (payload) => {
-            console.log('Subscription filter payload:', payload);
-            return Boolean(payload.broadcastNotification);
-        },
-        resolve: (payload) => {
-            console.log('Resolving payload:', payload);
-            return payload.broadcastNotification;
-        }
-    }),
+    (0, graphql_1.Subscription)(() => orders_resolver_1.OrderNotification),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], NotificationResolver.prototype, "broadcastNotification", null);
 exports.NotificationResolver = NotificationResolver = __decorate([
     (0, graphql_1.Resolver)(() => notification_entity_1.Notification),

@@ -489,8 +489,21 @@ export class OrdersService {
     });
 
     try {
-      await this.pubSubService.publish(`userNotification_${order.shopId}`, {
-        userNotification: {
+//       await this.pubSubService.publish(`userNotification_${order.shopId}`, {
+//         userNotification: {
+//           userId: order.shopId,
+//         title: 'تحديث حالة الطلب',
+// message: `تم تحديث حالة طلبك إلى ${input.status}`,
+
+//           route: `/orders/${updatedOrder.id}`,
+//           imageUrl:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQasKPDCewT1v2j4mJjfCN1rqH2SczejiwkoA&s',
+//           createdAt:order.createdAt,
+//           isRead:false,
+//           id:'frrfqre'
+//         }
+//       });
+await this.pubSubService.publish('broadcastNotification', {
+        broadcastNotification: {
           userId: order.shopId,
         title: 'تحديث حالة الطلب',
 message: `تم تحديث حالة طلبك إلى ${input.status}`,

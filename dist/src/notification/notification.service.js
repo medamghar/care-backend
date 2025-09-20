@@ -40,8 +40,10 @@ let NotificationService = class NotificationService {
                 imageUrl: url,
                 title
             } });
+        console.log('ddddddddddddddddddddddddddddddddd', notifications);
         if (notifications) {
-            await this.pubSubService.publish(`broadcastNotification`, { broadcastNotification: { id: 'sdfsd', title, message, url } });
+            console.log(notifications);
+            await this.pubSubService.publish(`broadcastNotification`, { broadcastNotification: notifications });
         }
         return notifications;
     }

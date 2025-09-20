@@ -127,6 +127,14 @@ __decorate([
     (0, graphql_1.Field)(() => commercial_agent_dto_1.CommercialAgent, { nullable: true }),
     __metadata("design:type", commercial_agent_dto_1.CommercialAgent)
 ], AuthUser.prototype, "commercialAgent", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", Date)
+], AuthUser.prototype, "createdAt", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", Date)
+], AuthUser.prototype, "updatedAt", void 0);
 exports.AuthUser = AuthUser = __decorate([
     (0, graphql_1.ObjectType)()
 ], AuthUser);

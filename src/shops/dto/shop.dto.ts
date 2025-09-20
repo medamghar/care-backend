@@ -52,6 +52,9 @@ export class Shop {
   @Field({ nullable: true })
   profileImage?: string;
 
+  @Field({ nullable: true })
+  lastOrder?: string;
+
   @Field(() => [ShopImage], { nullable: true })
   shopImages?: ShopImage[];
 

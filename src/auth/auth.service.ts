@@ -16,27 +16,6 @@ export class AuthService {
 
   async validateUser(phone: string, password: string): Promise<any> {
     // Check if it's a shop login
-    const shop = await this.prisma.shop.findUnique({
-      where: { phone },
-      include: {
-        createdBy: {
-          include: { role: true },
-        },
-      },
-    });
-
-    if (shop && shop.status === 'APPROVED') {
-      const isPasswordValid = await bcrypt.compare(password, shop.passwordHash);
-      if (isPasswordValid) {
-        return {
-          id: shop.id,
-          phone: shop.phone,
-          type: 'shop',
-          role: { name: 'shop_owner', permissions: {} },
-          shop: shop,
-        };
-      }
-    }
 
     // Check if it's a user login (admin, commercial agent, etc.)
     const user = await this.prisma.user.findUnique({
@@ -56,6 +35,8 @@ export class AuthService {
           type: 'user',
           role: user.role,
           commercialAgent: user.commercialAgent,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
         };
       }
     }
@@ -121,6 +102,8 @@ export class AuthService {
           },
           type: user.type,
           commercialAgent: user.commercialAgent,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
         },
       };
     } catch {
@@ -131,6 +114,7 @@ export class AuthService {
       };
     }
   }
+
   async shopLogin(loginInput: LoginInput): Promise<AuthResponse> {
     const { phone, password } = loginInput;
 
@@ -202,6 +186,8 @@ export class AuthService {
         type: 'shop',
         role: { id: 'shop_owner', name: 'shop_owner', permissions: {} },
         shop: shop,
+        createdAt: shop.createdAt,
+        updatedAt: shop.updatedAt,
       };
 
       const payload = {
@@ -239,6 +225,8 @@ export class AuthService {
             permissions: JSON.stringify(user.role.permissions),
           },
           type: user.type,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
         },
       };
     } catch {
@@ -365,6 +353,8 @@ export class AuthService {
           },
           type: payload.type,
           commercialAgent: session.user?.commercialAgent,
+          createdAt: session.user?.createdAt || new Date(),
+          updatedAt: session.user?.updatedAt || new Date(),
         },
       };
     } catch {
@@ -489,6 +479,8 @@ export class AuthService {
         permissions: user.role.permissions,
       },
       commercialAgent: user.commercialAgent,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
     };
   }
 
@@ -514,6 +506,8 @@ export class AuthService {
         permissions: updatedUser.role.permissions,
       },
       commercialAgent: updatedUser.commercialAgent,
+      createdAt: updatedUser.createdAt,
+      updatedAt: updatedUser.updatedAt,
     };
   }
 }

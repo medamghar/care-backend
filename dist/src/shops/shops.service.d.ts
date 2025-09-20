@@ -13,19 +13,17 @@ export declare class ShopsService {
     findById(id: string): Promise<{
         shopImages: {
             id: string;
-            imageUrl: string;
             sortOrder: number;
             shopId: string;
+            imageUrl: string;
         }[];
     } & {
         id: string;
+        phone: string;
         nameAr: string;
         nameFr: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        phone: string;
-        passwordHash: string;
         ownerName: string;
+        passwordHash: string;
         city: string;
         address: string;
         latitude: number | null;
@@ -34,16 +32,16 @@ export declare class ShopsService {
         status: import(".prisma/client").$Enums.ShopStatus;
         createdByUserId: string | null;
         approvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     findByPhone(phone: string): Promise<{
         id: string;
+        phone: string;
         nameAr: string;
         nameFr: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        phone: string;
-        passwordHash: string;
         ownerName: string;
+        passwordHash: string;
         city: string;
         address: string;
         latitude: number | null;
@@ -52,23 +50,24 @@ export declare class ShopsService {
         status: import(".prisma/client").$Enums.ShopStatus;
         createdByUserId: string | null;
         approvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
-    findAll(filters?: ShopFiltersInput): Promise<({
+    findAll(filters?: ShopFiltersInput): Promise<{
+        lastOrder: string;
+        orders: any;
         shopImages: {
             id: string;
-            imageUrl: string;
             sortOrder: number;
             shopId: string;
+            imageUrl: string;
         }[];
-    } & {
         id: string;
+        phone: string;
         nameAr: string;
         nameFr: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        phone: string;
-        passwordHash: string;
         ownerName: string;
+        passwordHash: string;
         city: string;
         address: string;
         latitude: number | null;
@@ -77,23 +76,24 @@ export declare class ShopsService {
         status: import(".prisma/client").$Enums.ShopStatus;
         createdByUserId: string | null;
         approvedByUserId: string | null;
-    })[]>;
-    findPendingShops(): Promise<({
-        shopImages: {
-            id: string;
-            imageUrl: string;
-            sortOrder: number;
-            shopId: string;
-        }[];
-    } & {
-        id: string;
-        nameAr: string;
-        nameFr: string | null;
         createdAt: Date;
         updatedAt: Date;
+    }[]>;
+    findPendingShops(): Promise<{
+        lastOrder: string;
+        orders: any;
+        shopImages: {
+            id: string;
+            sortOrder: number;
+            shopId: string;
+            imageUrl: string;
+        }[];
+        id: string;
         phone: string;
-        passwordHash: string;
+        nameAr: string;
+        nameFr: string | null;
         ownerName: string;
+        passwordHash: string;
         city: string;
         address: string;
         latitude: number | null;
@@ -102,17 +102,17 @@ export declare class ShopsService {
         status: import(".prisma/client").$Enums.ShopStatus;
         createdByUserId: string | null;
         approvedByUserId: string | null;
-    })[]>;
+        createdAt: Date;
+        updatedAt: Date;
+    }[]>;
     getShopStats(): Promise<ShopStats>;
     updatePassword(id: string, input: UpdateShopPasswordInput): Promise<{
         id: string;
+        phone: string;
         nameAr: string;
         nameFr: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        phone: string;
-        passwordHash: string;
         ownerName: string;
+        passwordHash: string;
         city: string;
         address: string;
         latitude: number | null;
@@ -121,16 +121,16 @@ export declare class ShopsService {
         status: import(".prisma/client").$Enums.ShopStatus;
         createdByUserId: string | null;
         approvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     updateStatus(id: string, status: 'PENDING' | 'APPROVED' | 'BLOCKED', approvedByUserId?: string): Promise<{
         id: string;
+        phone: string;
         nameAr: string;
         nameFr: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        phone: string;
-        passwordHash: string;
         ownerName: string;
+        passwordHash: string;
         city: string;
         address: string;
         latitude: number | null;
@@ -139,43 +139,43 @@ export declare class ShopsService {
         status: import(".prisma/client").$Enums.ShopStatus;
         createdByUserId: string | null;
         approvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     delete(id: string): Promise<boolean>;
     findShopImages(shopId: string): Promise<{
         id: string;
-        imageUrl: string;
         sortOrder: number;
         shopId: string;
+        imageUrl: string;
     }[]>;
     addShopImage(input: CreateShopImageInput): Promise<{
         id: string;
-        imageUrl: string;
         sortOrder: number;
         shopId: string;
+        imageUrl: string;
     }>;
     updateShopImage(id: string, input: UpdateShopImageInput): Promise<{
         id: string;
-        imageUrl: string;
         sortOrder: number;
         shopId: string;
+        imageUrl: string;
     }>;
     deleteShopImage(id: string): Promise<boolean>;
     createShop(input: CreateShopInput, createdByUserId?: string): Promise<{
         shopImages: {
             id: string;
-            imageUrl: string;
             sortOrder: number;
             shopId: string;
+            imageUrl: string;
         }[];
     } & {
         id: string;
+        phone: string;
         nameAr: string;
         nameFr: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        phone: string;
-        passwordHash: string;
         ownerName: string;
+        passwordHash: string;
         city: string;
         address: string;
         latitude: number | null;
@@ -184,16 +184,16 @@ export declare class ShopsService {
         status: import(".prisma/client").$Enums.ShopStatus;
         createdByUserId: string | null;
         approvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
     update(id: string, input: UpdateShopInput, image?: Promise<FileUpload[]>): Promise<{
         id: string;
+        phone: string;
         nameAr: string;
         nameFr: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        phone: string;
-        passwordHash: string;
         ownerName: string;
+        passwordHash: string;
         city: string;
         address: string;
         latitude: number | null;
@@ -202,5 +202,7 @@ export declare class ShopsService {
         status: import(".prisma/client").$Enums.ShopStatus;
         createdByUserId: string | null;
         approvedByUserId: string | null;
+        createdAt: Date;
+        updatedAt: Date;
     }>;
 }

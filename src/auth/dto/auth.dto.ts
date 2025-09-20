@@ -87,6 +87,11 @@ export class AuthUser {
 
   @Field(() => CommercialAgent, { nullable: true })
   commercialAgent?: CommercialAgent;
+  @Field({nullable:true})
+  createdAt: Date;
+
+  @Field({nullable:true})
+  updatedAt: Date;
 }
 
 @ObjectType()

@@ -86,6 +86,14 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "basePrice", void 0);
 __decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, graphql_1.Field)(() => graphql_1.Float),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], Product.prototype, "comparePrice", void 0);
+__decorate([
     (0, graphql_1.Field)(() => graphql_1.Int),
     __metadata("design:type", Number)
 ], Product.prototype, "currentStock", void 0);
@@ -176,6 +184,14 @@ __decorate([
     __metadata("design:type", Number)
 ], CreateProductInput.prototype, "basePrice", void 0);
 __decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, graphql_1.Field)(() => graphql_1.Float),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], CreateProductInput.prototype, "comparePrice", void 0);
+__decorate([
     (0, graphql_1.Field)(() => graphql_1.Int),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.Min)(0),
@@ -193,6 +209,11 @@ __decorate([
     (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
 ], CreateProductInput.prototype, "isActive", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreateProductInput.prototype, "imageUrl", void 0);
 exports.CreateProductInput = CreateProductInput = __decorate([
     (0, graphql_1.InputType)()
 ], CreateProductInput);
@@ -261,6 +282,14 @@ __decorate([
     (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
 ], UpdateProductInput.prototype, "isActive", void 0);
+__decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    (0, graphql_1.Field)(() => graphql_1.Float),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.Min)(0),
+    __metadata("design:type", Number)
+], UpdateProductInput.prototype, "comparePrice", void 0);
 exports.UpdateProductInput = UpdateProductInput = __decorate([
     (0, graphql_1.InputType)()
 ], UpdateProductInput);

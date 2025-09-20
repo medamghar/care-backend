@@ -41,6 +41,7 @@ export declare class BrandsService {
             categoryId: string;
             brandId: string;
             basePrice: number;
+            comparePrice: number | null;
             currentStock: number;
             isFeatured: boolean;
             createdAt: Date;

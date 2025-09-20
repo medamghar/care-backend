@@ -20,9 +20,13 @@ const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 const product_dto_1 = require("./dto/product.dto");
 const category_dto_1 = require("../categories/dto/category.dto");
 const brand_dto_1 = require("../brands/dto/brand.dto");
+const graphql_upload_ts_1 = require("graphql-upload-ts");
+const pubservice_service_1 = require("../pubservice/pubservice.service");
+const notification_entity_1 = require("../notification/notification.entity");
 let ProductsResolver = class ProductsResolver {
-    constructor(productsService) {
+    constructor(productsService, pubSubService) {
         this.productsService = productsService;
+        this.pubSubService = pubSubService;
     }
     async products(filters) {
         return this.productsService.getProducts(filters || {});
@@ -49,8 +53,17 @@ let ProductsResolver = class ProductsResolver {
     async brand(id) {
         return this.productsService.getBrand(id);
     }
-    async createProduct(input) {
-        return this.productsService.createProduct(input);
+    async createProduct(input, images) {
+        return this.productsService.createProduct(input, images);
+    }
+    async updatePriceTier(id, pricePerUnit, minQuantity) {
+        return this.productsService.updatePriceTier(id, minQuantity, pricePerUnit);
+    }
+    async deletePriceTier(id) {
+        return this.productsService.deletePriceTier(id);
+    }
+    async createMultipleProducts(input) {
+        return this.productsService.createMultipleProducts(input);
     }
     async updateProduct(id, input) {
         return this.productsService.updateProduct(id, input);
@@ -68,6 +81,10 @@ let ProductsResolver = class ProductsResolver {
     }
     async updateStock(productId, quantity, operation) {
         return this.productsService.updateStock(productId, quantity, operation);
+    }
+    async broadcastNotification() {
+        console.log('Subscription filter payload:');
+        return this.pubSubService.asyncIterator('broadcastNotification');
     }
 };
 exports.ProductsResolver = ProductsResolver;
@@ -130,10 +147,37 @@ __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, graphql_1.Mutation)(() => product_dto_1.Product),
     __param(0, (0, graphql_1.Args)('input')),
+    __param(1, (0, graphql_1.Args)('images', { type: () => [graphql_upload_ts_1.GraphQLUpload], nullable: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [product_dto_1.CreateProductInput]),
+    __metadata("design:paramtypes", [product_dto_1.CreateProductInput, Promise]),
     __metadata("design:returntype", Promise)
 ], ProductsResolver.prototype, "createProduct", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, graphql_1.Args)('id')),
+    __param(1, (0, graphql_1.Args)('pricePerUnit', { nullable: true })),
+    __param(2, (0, graphql_1.Args)('minQuantity', { nullable: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Number, Number]),
+    __metadata("design:returntype", Promise)
+], ProductsResolver.prototype, "updatePriceTier", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, graphql_1.Args)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], ProductsResolver.prototype, "deletePriceTier", null);
+__decorate([
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, graphql_1.Mutation)(() => [product_dto_1.Product]),
+    __param(0, (0, graphql_1.Args)('input', { type: () => [product_dto_1.CreateProductInput] })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array]),
+    __metadata("design:returntype", Promise)
+], ProductsResolver.prototype, "createMultipleProducts", null);
 __decorate([
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
     (0, graphql_1.Mutation)(() => product_dto_1.Product),
@@ -181,8 +225,23 @@ __decorate([
     __metadata("design:paramtypes", [String, Number, String]),
     __metadata("design:returntype", Promise)
 ], ProductsResolver.prototype, "updateStock", null);
+__decorate([
+    (0, graphql_1.Subscription)(() => notification_entity_1.Notification, {
+        filter: (payload) => {
+            console.log('Subscription filter payload:222', payload);
+            return Boolean(payload.broadcastNotification);
+        },
+        resolve: (payload) => {
+            return payload.broadcastNotification;
+            console.log('Subscription filter payload:1111', payload);
+        }
+    }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ProductsResolver.prototype, "broadcastNotification", null);
 exports.ProductsResolver = ProductsResolver = __decorate([
     (0, graphql_1.Resolver)(() => product_dto_1.Product),
-    __metadata("design:paramtypes", [products_service_1.ProductsService])
+    __metadata("design:paramtypes", [products_service_1.ProductsService, pubservice_service_1.PubserviceService])
 ], ProductsResolver);
 //# sourceMappingURL=products.resolver.js.map

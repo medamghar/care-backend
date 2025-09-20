@@ -60,6 +60,13 @@ export class Product {
   @Field(() => Float)
   basePrice: number;
 
+  @Field({nullable:true})
+  @Field(() => Float)
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  comparePrice: number;
+
   @Field(() => Int)
   currentStock: number;
 
@@ -130,6 +137,13 @@ export class CreateProductInput {
   @Min(0)
   basePrice: number;
 
+  @Field({nullable:true})
+  @Field(() => Float)
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  comparePrice: number;
+
   @Field(() => Int)
   @IsNumber()
   @Min(0)
@@ -144,6 +158,11 @@ export class CreateProductInput {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  imageUrl?: string;
+
 }
 
 @InputType()
@@ -201,6 +220,13 @@ export class UpdateProductInput {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+ @Field({nullable:true})
+  @Field(() => Float)
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  comparePrice: number;
 }
 
 @InputType()

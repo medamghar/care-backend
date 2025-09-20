@@ -42,60 +42,83 @@ export class ShopsService {
   }
 
   async findAll(filters?: ShopFiltersInput) {
-    const where: any = {};
-
-    if (filters) {
-      if (filters.search) {
-        where.OR = [
-          { nameAr: { contains: filters.search, mode: 'insensitive' } },
-          { nameFr: { contains: filters.search, mode: 'insensitive' } },
-          { ownerName: { contains: filters.search, mode: 'insensitive' } },
-          { phone: { contains: filters.search, mode: 'insensitive' } },
-        ];
-      }
-
-      if (filters.city) {
-        where.city = { contains: filters.city, mode: 'insensitive' };
-      }
-
-      if (filters.status) {
-        where.status = filters.status;
-      }
-
-      if (filters.ownerName) {
-        where.ownerName = { contains: filters.ownerName, mode: 'insensitive' };
-      }
+  const where: any = {};
+  if (filters) {
+    if (filters.search) {
+      where.OR = [
+        { nameAr: { contains: filters.search, mode: 'insensitive' } },
+        { nameFr: { contains: filters.search, mode: 'insensitive' } },
+        { ownerName: { contains: filters.search, mode: 'insensitive' } },
+        { phone: { contains: filters.search, mode: 'insensitive' } },
+      ];
     }
-
-    return this.prisma.shop.findMany({
-      where,
-      include: {
-        shopImages: {
-          orderBy: { sortOrder: 'asc' },
-        },
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    if (filters.city) {
+      where.city = { contains: filters.city, mode: 'insensitive' };
+    }
+    if (filters.status) {
+      where.status = filters.status;
+    }
+    if (filters.ownerName) {
+      where.ownerName = { contains: filters.ownerName, mode: 'insensitive' };
+    }
   }
 
-  async findPendingShops() {
-    return this.prisma.shop.findMany({
-      where: {
-        status: 'PENDING',
+  const shops = await this.prisma.shop.findMany({
+    where,
+    include: {
+      shopImages: {
+        orderBy: { sortOrder: 'asc' },
       },
-      include: {
-        shopImages: {
-          orderBy: { sortOrder: 'asc' },
+      orders: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        select: {
+          createdAt: true,
         },
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
-  }
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
 
+  // Transform the data to include lastOrder field
+  return shops.map(shop => ({
+    ...shop,
+    lastOrder: shop.orders.length > 0 ? shop.orders[0].createdAt.toISOString() : null,
+    orders: undefined, // Remove orders from the response since we only needed it for lastOrder
+  }));
+}
+
+async findPendingShops() {
+  const shops = await this.prisma.shop.findMany({
+    where: {
+      status: 'PENDING',
+    },
+    include: {
+      shopImages: {
+        orderBy: { sortOrder: 'asc' },
+      },
+      orders: {
+        orderBy: { createdAt: 'desc' },
+        take: 1,
+        select: {
+          createdAt: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  // Transform the data to include lastOrder field
+  return shops.map(shop => ({
+    ...shop,
+    lastOrder: shop.orders.length > 0 ? shop.orders[0].createdAt.toISOString() : null,
+    orders: undefined, // Remove orders from the response since we only needed it for lastOrder
+  }));
+}
   async getShopStats(): Promise<ShopStats> {
     const totalShops = await this.prisma.shop.count();
     const activeShops = await this.prisma.shop.count({

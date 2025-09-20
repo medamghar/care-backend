@@ -1,53 +1,15 @@
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateProductInput, UpdateProductInput, CreateCategoryInput, CreateBrandInput, ProductFilters, ProductConnection } from './dto/product.dto';
+import { CreateProductInput, UpdateProductInput, CreateCategoryInput, CreateBrandInput, ProductFilters, ProductConnection, Product } from './dto/product.dto';
+import { FileUpload } from 'graphql-upload-ts';
+import { ImageService } from 'src/images/images.service';
+import { NotificationService } from 'src/notification/notification.service';
 export declare class ProductsService {
     private prisma;
-    constructor(prisma: PrismaService);
-    createProduct(input: CreateProductInput): Promise<{
-        category: {
-            id: string;
-            nameAr: string;
-            nameFr: string;
-            imageUrl: string;
-            parentId: string | null;
-            sortOrder: number;
-            isActive: boolean;
-        };
-        brand: {
-            id: string;
-            isActive: boolean;
-            name: string;
-            logoUrl: string;
-        };
-        images: {
-            id: string;
-            imageUrl: string;
-            sortOrder: number;
-            productId: string;
-            isPrimary: boolean;
-        }[];
-        priceTiers: {
-            id: string;
-            productId: string;
-            minQuantity: number;
-            pricePerUnit: number;
-        }[];
-    } & {
-        id: string;
-        nameAr: string;
-        nameFr: string;
-        isActive: boolean;
-        sku: string;
-        descriptionAr: string | null;
-        descriptionFr: string | null;
-        categoryId: string;
-        brandId: string;
-        basePrice: number;
-        currentStock: number;
-        isFeatured: boolean;
-        createdAt: Date;
-        updatedAt: Date;
-    }>;
+    private readonly imageService;
+    private readonly notificationService;
+    constructor(prisma: PrismaService, imageService: ImageService, notificationService: NotificationService);
+    private readonly baseUrl;
+    createProduct(input: CreateProductInput, images?: Promise<FileUpload[]>): Promise<Product>;
     updateProduct(id: string, input: UpdateProductInput): Promise<{
         category: {
             id: string;
@@ -88,6 +50,7 @@ export declare class ProductsService {
         categoryId: string;
         brandId: string;
         basePrice: number;
+        comparePrice: number | null;
         currentStock: number;
         isFeatured: boolean;
         createdAt: Date;
@@ -134,6 +97,7 @@ export declare class ProductsService {
         categoryId: string;
         brandId: string;
         basePrice: number;
+        comparePrice: number | null;
         currentStock: number;
         isFeatured: boolean;
         createdAt: Date;
@@ -180,6 +144,7 @@ export declare class ProductsService {
         categoryId: string;
         brandId: string;
         basePrice: number;
+        comparePrice: number | null;
         currentStock: number;
         isFeatured: boolean;
         createdAt: Date;
@@ -288,6 +253,7 @@ export declare class ProductsService {
             categoryId: string;
             brandId: string;
             basePrice: number;
+            comparePrice: number | null;
             currentStock: number;
             isFeatured: boolean;
             createdAt: Date;
@@ -347,6 +313,7 @@ export declare class ProductsService {
             categoryId: string;
             brandId: string;
             basePrice: number;
+            comparePrice: number | null;
             currentStock: number;
             isFeatured: boolean;
             createdAt: Date;
@@ -405,6 +372,7 @@ export declare class ProductsService {
         categoryId: string;
         brandId: string;
         basePrice: number;
+        comparePrice: number | null;
         currentStock: number;
         isFeatured: boolean;
         createdAt: Date;
@@ -421,9 +389,18 @@ export declare class ProductsService {
         categoryId: string;
         brandId: string;
         basePrice: number;
+        comparePrice: number | null;
         currentStock: number;
         isFeatured: boolean;
         createdAt: Date;
         updatedAt: Date;
     }>;
+    createMultipleProducts(input: CreateProductInput[]): Promise<Product[]>;
+    createMultipleProductsBatch(input: CreateProductInput[]): Promise<{
+        count: number;
+        products: Product[];
+    }>;
+    private validateReferences;
+    updatePriceTier: (id: string, minQuantity: number, pricePerUnit: number) => Promise<boolean>;
+    deletePriceTier: (id: string) => Promise<boolean>;
 }

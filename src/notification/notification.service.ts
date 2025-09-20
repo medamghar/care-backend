@@ -8,7 +8,7 @@ import { PubserviceService } from 'src/pubservice/pubservice.service';
 @Injectable()
 export class NotificationService {  
 
-  constructor(private prisma: PrismaService , private readonly pubSubService: PubserviceService) {  
+  constructor(private prisma: PrismaService , private readonly pubSubService: PubserviceService ,) {  
   }
 
   async findMyNotifications(userId: string): Promise<Notification[]> {
@@ -43,8 +43,10 @@ export class NotificationService {
         title
         
       }})
+      console.log('ddddddddddddddddddddddddddddddddd',notifications)
       if(notifications){
-      await this.pubSubService.publish(`broadcastNotification`, { broadcastNotification: {id:'sdfsd',title,message,url}});
+        console.log(notifications)
+      await this.pubSubService.publish(`broadcastNotification`, { broadcastNotification: notifications});
        
 
 

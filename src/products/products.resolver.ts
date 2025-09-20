@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, ID, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID, Int, Subscription } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -11,10 +11,13 @@ import {
 } from './dto/product.dto';
 import { Category } from '../categories/dto/category.dto';
 import { Brand } from '../brands/dto/brand.dto';
+import { FileUpload, GraphQLUpload } from 'graphql-upload-ts';
+import { PubserviceService } from 'src/pubservice/pubservice.service';
+import { Notification } from 'src/notification/notification.entity';
 
 @Resolver(() => Product)
 export class ProductsResolver {
-  constructor(private productsService: ProductsService) {}
+  constructor(private productsService: ProductsService, private readonly pubSubService:PubserviceService ) {}
 
   // Public Queries (for mobile app)
   @Query(() => ProductConnection)
@@ -70,9 +73,37 @@ export class ProductsResolver {
   @Mutation(() => Product)
   async createProduct(
     @Args('input') input: CreateProductInput,
+    @Args('images', { type: () => [GraphQLUpload] , nullable: true}) images: Promise<FileUpload[]>,
+    
   ): Promise<Product> {
-    return this.productsService.createProduct(input);
+    return this.productsService.createProduct(input,images);
   }
+    @UseGuards(JwtAuthGuard)
+  @Mutation(() => Boolean)
+  async updatePriceTier(
+    @Args('id') id: string,
+    @Args('pricePerUnit',{nullable:true}) pricePerUnit: number,
+    @Args('minQuantity',{nullable:true}) minQuantity: number,
+    
+  ): Promise<boolean> {
+    return this.productsService.updatePriceTier(id,minQuantity,pricePerUnit);
+  }
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Boolean)
+  async deletePriceTier(
+    @Args('id') id: string,    
+  ): Promise<boolean> {
+    return this.productsService.deletePriceTier(id);
+  }
+
+@UseGuards(JwtAuthGuard)
+@Mutation(() => [Product]) // Changed to return array
+async createMultipleProducts(
+  @Args('input', { type: () => [CreateProductInput] }) input: CreateProductInput[],
+): Promise<Product[]> {
+  return this.productsService.createMultipleProducts(input);
+}
+
 
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Product)
@@ -126,4 +157,23 @@ export class ProductsResolver {
   ): Promise<any> {
     return this.productsService.updateStock(productId, quantity, operation);
   }
+   @Subscription(() => Notification, {
+          filter: (payload) => {
+              // The filter should return true to allow the notification through
+                                    console.log('Subscription filter payload:222',payload);
+
+              return Boolean(payload.broadcastNotification);
+          },
+          // Optionally resolve the payload if needed
+          resolve: (payload) => {
+              return payload.broadcastNotification;
+                                    console.log('Subscription filter payload:1111',payload);
+
+          }
+      })
+      async broadcastNotification() {
+                      console.log('Subscription filter payload:');
+  
+          return this.pubSubService.asyncIterator('broadcastNotification');
+      }
 }

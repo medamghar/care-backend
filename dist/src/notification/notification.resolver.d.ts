@@ -10,5 +10,5 @@ export declare class NotificationResolver {
     myNotifications(context: any): Promise<Notification[]>;
     createBroadcastNotification(message: string, route: string, title: string, url: string): Promise<Notification>;
     markNotificationAsRead(id: string, context: any): Promise<Notification>;
-    broadcastNotification(): Promise<AsyncIterator<unknown, any, any>>;
+    broadcastNotification(): AsyncIterator<unknown, any, any>;
 }

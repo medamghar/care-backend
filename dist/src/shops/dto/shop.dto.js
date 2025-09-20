@@ -66,6 +66,10 @@ __decorate([
     __metadata("design:type", String)
 ], Shop.prototype, "profileImage", void 0);
 __decorate([
+    (0, graphql_1.Field)({ nullable: true }),
+    __metadata("design:type", String)
+], Shop.prototype, "lastOrder", void 0);
+__decorate([
     (0, graphql_1.Field)(() => [shop_image_dto_1.ShopImage], { nullable: true }),
     __metadata("design:type", Array)
 ], Shop.prototype, "shopImages", void 0);

@@ -12,6 +12,7 @@ export declare class Shop {
     longitude?: number;
     status: ShopStatus;
     profileImage?: string;
+    lastOrder?: string;
     shopImages?: ShopImage[];
     createdAt: Date;
     updatedAt: Date;

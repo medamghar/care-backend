@@ -13,10 +13,12 @@ type AuthResponse {
 
 type AuthUser {
   commercialAgent: CommercialAgent
+  createdAt: DateTime
   id: String!
   phone: String!
   role: Role!
   type: String!
+  updatedAt: DateTime
 }
 
 type Brand {
@@ -42,7 +44,21 @@ input CartItemInput {
 }
 
 type Category {
+  """Full path from root to this category"""
+  breadcrumb: [Category!]!
   children: [Category!]
+
+  """Number of direct children"""
+  childrenCount: Int!
+
+  """Category depth level (0 for root categories)"""
+  depth: Int!
+
+  """All descendants of this category"""
+  descendants: [Category!]!
+
+  """Check if category has children"""
+  hasChildren: Boolean!
   id: ID!
   imageUrl: String!
   isActive: Boolean!
@@ -51,6 +67,9 @@ type Category {
   parent: Category
   parentId: ID
   sortOrder: Int!
+
+  """Total number of descendants"""
+  totalDescendants: Int!
 }
 
 type CommercialAgent {
@@ -66,6 +85,15 @@ input CreateBrandInput {
   name: String!
 }
 
+input CreateCategoryInput {
+  imageUrl: String!
+  isActive: Boolean! = true
+  nameAr: String!
+  nameFr: String!
+  parentId: ID
+  sortOrder: Int! = 0
+}
+
 input CreateOrderInput {
   items: [OrderItemInput!]!
   notes: String
@@ -75,9 +103,11 @@ input CreateProductInput {
   basePrice: Float!
   brandId: ID!
   categoryId: ID!
+  comparePrice: Float
   currentStock: Int!
   descriptionAr: String
   descriptionFr: String
+  imageUrl: String
   isActive: Boolean! = true
   isFeatured: Boolean! = false
   nameAr: String!
@@ -151,13 +181,24 @@ type Mutation {
   cancelOrder(id: ID!): Order!
   createBrand(input: CreateBrandInput!): Brand!
   createBroadcastNotification(message: String!, route: String!, title: String!, url: String!): Notification!
+
+  """Create a new category"""
+  createCategory(input: CreateCategoryInput!): Category!
+  createMultipleProducts(input: [CreateProductInput!]!): [Product!]!
   createOrder(input: CreateOrderInput!): Order!
-  createProduct(input: CreateProductInput!): Product!
+  createProduct(images: [Upload!], input: CreateProductInput!): Product!
   createPromotion(input: CreatePromotionInput!): Promotion!
   createShop(input: CreateShopInput!): Shop!
   createSlider(input: CreateSliderInput!): Slider!
   createUser(input: CreateUserInput!): User!
   deleteBrand(id: ID!): Boolean!
+
+  """Delete a category and all its subcategories"""
+  deleteCategory(
+    """Category ID"""
+    id: ID!
+  ): Boolean!
+  deletePriceTier(id: String!): Boolean!
   deleteProduct(id: ID!): Boolean!
   deletePromotion(id: ID!): Boolean!
   deleteShop(id: ID!): Boolean!
@@ -171,9 +212,32 @@ type Mutation {
   registerShop(input: RegisterShopInput!): RegisterResponse!
   reorderFromPrevious(originalOrderId: ID!): Order!
   shopLogin(input: LoginInput!): AuthResponse!
+
+  """Toggle the active status of a category"""
+  toggleCategoryActive(
+    """Category ID"""
+    id: ID!
+  ): Category!
   updateBrand(id: ID!, input: UpdateBrandInput!): Brand!
+
+  """Update an existing category"""
+  updateCategory(
+    """Category ID"""
+    id: ID!
+    input: UpdateCategoryInput!
+  ): Category!
+
+  """Update the sort order of a category"""
+  updateCategorySortOrder(
+    """Category ID"""
+    id: ID!
+
+    """New sort order"""
+    sortOrder: Int!
+  ): Category!
   updateOrderStatus(id: ID!, input: UpdateOrderStatusInput!): Order!
   updatePassword(input: UpdatePasswordInput!): Boolean!
+  updatePriceTier(id: String!, minQuantity: Float, pricePerUnit: Float): Boolean!
   updateProduct(id: ID!, input: UpdateProductInput!): Product!
   updateProfile(input: UpdateProfileInput!): AuthUser!
   updatePromotion(id: ID!, input: UpdatePromotionInput!): Promotion!
@@ -374,6 +438,7 @@ type Product {
   basePrice: Float!
   brand: Brand!
   category: Category!
+  comparePrice: Float
   createdAt: DateTime!
   currentStock: Int!
   descriptionAr: String
@@ -436,8 +501,39 @@ type Query {
   brand(id: ID!): Brand!
   brands: [Brand!]!
   calculateCartTotal(items: [CartItemInput!]!): CartCalculationResult!
+
+  """Get all categories with hierarchical structure"""
   categories: [Category!]!
-  category(id: ID!): Category!
+
+  """Get categories by parent ID"""
+  categoriesByParent(
+    """Parent category ID (null for root categories)"""
+    parentId: ID
+  ): [Category!]!
+
+  """Get a specific category by ID"""
+  category(
+    """Category ID"""
+    id: ID!
+  ): Category!
+
+  """Get the depth level of a category"""
+  categoryDepth(
+    """Category ID"""
+    id: ID!
+  ): Int!
+
+  """Get all descendants of a category"""
+  categoryDescendants(
+    """Category ID"""
+    id: ID!
+  ): [Category!]!
+
+  """Get the full path from root to category"""
+  categoryPath(
+    """Category ID"""
+    id: ID!
+  ): [Category!]!
   featuredProducts(limit: Int! = 10): [Product!]!
   getProfile: AuthUser!
   myNotifications: [Notification!]!
@@ -496,6 +592,7 @@ type Shop {
   city: String!
   createdAt: DateTime!
   id: ID!
+  lastOrder: String
   latitude: Float
   longitude: Float
   nameAr: String!
@@ -540,7 +637,7 @@ type Slider {
 }
 
 type Subscription {
-  broadcastNotification: Notification!
+  broadcastNotification: OrderNotification!
   userNotification(userId: String!): OrderNotification!
 }
 
@@ -562,6 +659,15 @@ input UpdateBrandInput {
   name: String
 }
 
+input UpdateCategoryInput {
+  imageUrl: String
+  isActive: Boolean
+  nameAr: String
+  nameFr: String
+  parentId: ID
+  sortOrder: Int
+}
+
 input UpdateOrderStatusInput {
   status: OrderStatus!
 }
@@ -575,6 +681,7 @@ input UpdateProductInput {
   basePrice: Float
   brandId: String
   categoryId: String
+  comparePrice: Float
   currentStock: Int
   descriptionAr: String
   descriptionFr: String

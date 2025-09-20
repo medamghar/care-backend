@@ -22,26 +22,6 @@ let AuthService = class AuthService {
         this.configService = configService;
     }
     async validateUser(phone, password) {
-        const shop = await this.prisma.shop.findUnique({
-            where: { phone },
-            include: {
-                createdBy: {
-                    include: { role: true },
-                },
-            },
-        });
-        if (shop && shop.status === 'APPROVED') {
-            const isPasswordValid = await bcrypt.compare(password, shop.passwordHash);
-            if (isPasswordValid) {
-                return {
-                    id: shop.id,
-                    phone: shop.phone,
-                    type: 'shop',
-                    role: { name: 'shop_owner', permissions: {} },
-                    shop: shop,
-                };
-            }
-        }
         const user = await this.prisma.user.findUnique({
             where: { phone },
             include: {
@@ -58,6 +38,8 @@ let AuthService = class AuthService {
                     type: 'user',
                     role: user.role,
                     commercialAgent: user.commercialAgent,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
                 };
             }
         }
@@ -113,6 +95,8 @@ let AuthService = class AuthService {
                     },
                     type: user.type,
                     commercialAgent: user.commercialAgent,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
                 },
             };
         }
@@ -184,6 +168,8 @@ let AuthService = class AuthService {
                 type: 'shop',
                 role: { id: 'shop_owner', name: 'shop_owner', permissions: {} },
                 shop: shop,
+                createdAt: shop.createdAt,
+                updatedAt: shop.updatedAt,
             };
             const payload = {
                 sub: user.id,
@@ -216,6 +202,8 @@ let AuthService = class AuthService {
                         permissions: JSON.stringify(user.role.permissions),
                     },
                     type: user.type,
+                    createdAt: user.createdAt,
+                    updatedAt: user.updatedAt,
                 },
             };
         }
@@ -319,6 +307,8 @@ let AuthService = class AuthService {
                     },
                     type: payload.type,
                     commercialAgent: session.user?.commercialAgent,
+                    createdAt: session.user?.createdAt || new Date(),
+                    updatedAt: session.user?.updatedAt || new Date(),
                 },
             };
         }
@@ -420,6 +410,8 @@ let AuthService = class AuthService {
                 permissions: user.role.permissions,
             },
             commercialAgent: user.commercialAgent,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
         };
     }
     async updateProfile(userId, input) {
@@ -443,6 +435,8 @@ let AuthService = class AuthService {
                 permissions: updatedUser.role.permissions,
             },
             commercialAgent: updatedUser.commercialAgent,
+            createdAt: updatedUser.createdAt,
+            updatedAt: updatedUser.updatedAt,
         };
     }
 };

@@ -24,6 +24,8 @@ export declare class AuthUser {
     type: string;
     role: Role;
     commercialAgent?: CommercialAgent;
+    createdAt: Date;
+    updatedAt: Date;
 }
 export declare class AuthPayload {
     accessToken: string;

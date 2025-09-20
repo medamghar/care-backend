@@ -19,6 +19,7 @@ import { PubserviceService } from './pubservice/pubservice.service';
 import { PubSub } from 'graphql-subscriptions';
 import { ImagesModule } from './images/images.module';
 import { NotificationModule } from './notification/notification.module';
+import { PubserviceModule } from './pubservice/pubservice.module';
 
 @Module({
   imports: [
@@ -203,6 +204,7 @@ import { NotificationModule } from './notification/notification.module';
     PromotionsModule,
     ImagesModule,
     NotificationModule,
+    PubserviceModule
 
   ],
   providers: [PubserviceService, PubSub],

@@ -147,6 +147,7 @@ model Product {
   categoryId    String  @map("category_id")
   brandId       String  @map("brand_id")
   basePrice     Float   @map("base_price")
+  comparePrice  Float?  @default(0) @map("compare_price")
   currentStock  Int     @default(0) @map("current_stock")
   isFeatured    Boolean @default(false) @map("is_featured")
   isActive      Boolean @default(true) @map("is_active")

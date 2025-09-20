@@ -11,13 +11,16 @@ const common_1 = require("@nestjs/common");
 const products_service_1 = require("./products.service");
 const products_resolver_1 = require("./products.resolver");
 const prisma_module_1 = require("../prisma/prisma.module");
+const images_service_1 = require("../images/images.service");
+const notification_service_1 = require("../notification/notification.service");
+const pubservice_service_1 = require("../pubservice/pubservice.service");
 let ProductsModule = class ProductsModule {
 };
 exports.ProductsModule = ProductsModule;
 exports.ProductsModule = ProductsModule = __decorate([
     (0, common_1.Module)({
         imports: [prisma_module_1.PrismaModule],
-        providers: [products_service_1.ProductsService, products_resolver_1.ProductsResolver],
+        providers: [products_service_1.ProductsService, products_resolver_1.ProductsResolver, images_service_1.ImageService, notification_service_1.NotificationService, pubservice_service_1.PubserviceService],
         exports: [products_service_1.ProductsService],
     })
 ], ProductsModule);

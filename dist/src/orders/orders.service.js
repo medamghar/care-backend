@@ -374,8 +374,8 @@ let OrdersService = class OrdersService {
             },
         });
         try {
-            await this.pubSubService.publish(`userNotification_${order.shopId}`, {
-                userNotification: {
+            await this.pubSubService.publish('broadcastNotification', {
+                broadcastNotification: {
                     userId: order.shopId,
                     title: 'تحديث حالة الطلب',
                     message: `تم تحديث حالة طلبك إلى ${input.status}`,

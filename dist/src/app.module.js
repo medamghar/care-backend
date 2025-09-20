@@ -28,6 +28,7 @@ const pubservice_service_1 = require("./pubservice/pubservice.service");
 const graphql_subscriptions_1 = require("graphql-subscriptions");
 const images_module_1 = require("./images/images.module");
 const notification_module_1 = require("./notification/notification.module");
+const pubservice_module_1 = require("./pubservice/pubservice.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -172,6 +173,7 @@ exports.AppModule = AppModule = __decorate([
             promotions_module_1.PromotionsModule,
             images_module_1.ImagesModule,
             notification_module_1.NotificationModule,
+            pubservice_module_1.PubserviceModule
         ],
         providers: [pubservice_service_1.PubserviceService, graphql_subscriptions_1.PubSub],
     })
